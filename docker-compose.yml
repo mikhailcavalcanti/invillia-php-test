@@ -1,0 +1,25 @@
+#https://www.cloudreach.com/blog/containerize-this-php-apache-mysql-within-docker-containers/
+version: "3.2"
+services:
+  php:
+    build: './php/'
+    container_name: invillia-php
+    networks:
+      - backend
+    volumes:
+      - ./html/:/var/www/html/
+  apache:
+    build: './apache/'
+    container_name: invillia-apache
+    depends_on:
+      - php
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html/:/var/www/html/
+networks:
+  frontend:
+  backend:
