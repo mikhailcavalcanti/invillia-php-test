@@ -2,15 +2,16 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @author Mikhail Cavalcanti <mikhailcavalcanti@gmail.com>
  * @ORM\Entity
- * @ORM\Table(name="person")
+ * @ORM\Table(name="phone")
  */
-final class Person
+final class Phone
 {
 
     /**
@@ -21,41 +22,43 @@ final class Person
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank()
      *
      */
-    private $name;
+    private $number;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Person")
+     * @ORM\JoinColumn(name="id_person", referencedColumnName="id", nullable=false)
+     * @var Person
+     */
+    private $person;
+
+    /**
+     *
+     * @param string $number The phone number
+     * @param Person $person The owner's phone
+     */
+    public function __construct(string $number, Person $person)
+    {
+        $this->number = $number;
+        $this->person = $person;
+    }
 
     /**
      * @return mixed
      */
-    public function getId()
+    public function getId():int
     {
         return $this->id;
     }
 
     /**
-     * @param mixed $id
+     * @return string
      */
-    public function setId($id)
+    public function getNumber():string
     {
-        $this->id = $id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param mixed $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
+        return $this->number;
     }
 }
