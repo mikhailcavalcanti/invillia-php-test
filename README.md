@@ -9,6 +9,9 @@ Test project for Invillia company
         composer install
         bin/console doctrine:schema:create
 
+        # run the tests
+        ./bin/phpunit
+
 ### Docker (environment)
 
 - The project has a docker-compose.yml file, you just need to run the command bellow and it will create tree containers, Apache, Php, Mysql respectively.
@@ -27,3 +30,7 @@ Test project for Invillia company
 - To create the database schema first enter on the PHP container, then run the doctrine create schema command.
   - docker-compose exec php sh
   - bin/console doctrine:schema:create
+
+### Tests
+  - To run the tests just enter on the PHP container and execute the command:
+      - ./bin/phpunit

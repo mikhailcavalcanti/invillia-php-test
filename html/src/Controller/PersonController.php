@@ -15,7 +15,8 @@ use App\Form\MovieType;
  * Person controller.
  * @Route("/api", name="api_")
  */
-class PersonController extends FOSRestController
+//class PersonController extends FOSRestController
+class PersonController extends \FOS\RestBundle\Controller\AbstractFOSRestController
 {
 
     /**
@@ -24,7 +25,7 @@ class PersonController extends FOSRestController
      *
      * @return Response
      */
-    public function getMovieAction()
+    public function getPeopleAction()
     {
         $repository = $this->getDoctrine()->getRepository(Person::class);
         $people = $repository->findall();
