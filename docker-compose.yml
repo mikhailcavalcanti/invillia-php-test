@@ -20,6 +20,23 @@ services:
       - "8080:80"
     volumes:
       - ./html/:/var/www/html/
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: invillia-mysql
+    volumes:
+      - invillia_data/:/var/lib/mysql
+    networks:
+      - backend
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=invillia
+      - MYSQL_USER=usr_invillia
+      - MYSQL_PASSWORD=pwd_invillia
+    ports:
+      - 3306:3306
+volumes:
+  invillia_data: {}
 networks:
   frontend:
   backend:
