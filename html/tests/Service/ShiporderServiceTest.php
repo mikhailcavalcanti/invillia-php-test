@@ -6,11 +6,11 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * PersonServiceTest is the test class for the PersonService Class
+ * ShiporderServiceTest is the test class for the ShiporderService Class
  *
  * @author Mikhail Cavalcanti <mikhailcavalcanti@gmail.com>
  */
-final class PersonServiceTest extends KernelTestCase
+final class ShiporderServiceTest extends KernelTestCase
 {
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -33,15 +33,15 @@ final class PersonServiceTest extends KernelTestCase
         $this->entityManager = null;
     }
     
-    public function testProcessPeopleXml()
+    public function testProcessShipOrderXml()
     {
-        $service = new \App\Service\PersonService($this->entityManager);
-        $peopleBeforeOperation = $service->findAll();
-        $xmlFilePath = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, 'Assets', 'people.xml']));
-        $service->addPeopleFromXml($xmlFilePath);
-        $peopleAfterOperation = $service->findAll();
+        $service = new \App\Service\ShipOrderService($this->entityManager);
+        $shipOrdersTotalBeforeOperation = $service->findAll();
+        $xmlFilePath = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, 'Assets', 'shiporders.xml']));
+        $service->addShipOrdersFromXml($xmlFilePath);
+        $shipOrdersTotalAfterOperation = $service->findAll();
 
-        $this->assertCount(0, $peopleBeforeOperation);
-        $this->assertCount(3, $peopleAfterOperation);
+        $this->assertCount(0, $shipOrdersTotalBeforeOperation);
+        $this->assertCount(3, $shipOrdersTotalAfterOperation);
     }
 }

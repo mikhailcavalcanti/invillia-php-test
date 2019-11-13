@@ -2,6 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\Person;
+use Doctrine\ORM\EntityManager;
+use DomainException;
+
 /**
  * PersonService is the class responsible for the business logic of the Person domain
  *
@@ -12,15 +16,15 @@ class PersonService
 
     /**
      *
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
     private $entityManager;
 
     /**
-     * 
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     *
+     * @param EntityManager $entityManager
      */
-    public function __construct(\Doctrine\ORM\EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
@@ -37,7 +41,7 @@ class PersonService
         }
         $xmlObject = simplexml_load_file($xmlFilePath);
         foreach ($xmlObject->children() as $person) {
-            $personEntity = new \App\Entity\Person(
+            $personEntity = new Person(
                 strval($person->personname),
                 (array) $person->phones->phone,
                 intval($person->personid)
@@ -53,7 +57,6 @@ class PersonService
      */
     public function findAll()
     {
-        return $this->entityManager->getRepository(\App\Entity\Person::class)->findall();
+        return $this->entityManager->getRepository(Person::class)->findall();
     }
-
 }

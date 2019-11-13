@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -29,7 +28,7 @@ final class Phone
     private $number;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Person")
+     * @ORM\ManyToOne(targetEntity="Person")
      * @ORM\JoinColumn(name="id_person", referencedColumnName="id", nullable=false)
      * @var Person
      */
