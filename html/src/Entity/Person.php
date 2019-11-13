@@ -23,7 +23,7 @@ final class Person
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
      *
      */
