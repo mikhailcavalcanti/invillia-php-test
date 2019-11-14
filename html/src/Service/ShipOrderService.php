@@ -38,7 +38,7 @@ class ShipOrderService
     public function addShipOrdersFromXml($xmlFilePath)
     {
         if (!is_file($xmlFilePath)) {
-            throw new DomainException("Xml file doesn't exists in '${$xmlFilePath}'");
+            throw new DomainException("Xml file doesn't exists in '{$xmlFilePath}'");
         }
         $xmlObject = simplexml_load_file($xmlFilePath);
         $data = json_decode(json_encode($xmlObject), true)['shiporder'];

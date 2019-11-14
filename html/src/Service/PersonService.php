@@ -37,7 +37,7 @@ class PersonService
     public function addPeopleFromXml($xmlFilePath)
     {
         if (!is_file($xmlFilePath)) {
-            throw new DomainException("Xml file doesn't exists in '${$xmlFilePath}'");
+            throw new DomainException("Xml file doesn't exists in '{$xmlFilePath}'");
         }
         $xmlObject = simplexml_load_file($xmlFilePath);
         foreach ($xmlObject->children() as $person) {

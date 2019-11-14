@@ -1,0 +1,15 @@
+{# templates/default/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/ratchet/2.0.2/css/ratchet.css" rel="stylesheet"/>
+    <form enctype="multipart/form-data" action="/upload" method="post">
+        <label for="people" class="btn btn-primary btn-outlined">Click hete to choose the people Xml File:</label>
+        <input id="people" name="peopleXmlFile" type="file" style="visibility:hidden;"/>
+        <br/><br/><br/>
+        <label for="shiporders" class="btn btn-primary btn-outlined">Click hete to choose the ship orders Xml File:</label>
+        <input id="shiporders" name="shipOrdersXmlFile" type="file" style="visibility:hidden;"/>
+        <br/><br/>
+        <input type="submit" value="Send and process files" class="btn btn-primary"/>
+    </form>
+{% endblock %}

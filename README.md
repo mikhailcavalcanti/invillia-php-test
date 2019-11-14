@@ -34,3 +34,15 @@ Test project for Invillia company
 ### Tests
   - To run the tests just enter on the PHP container and execute the command:
       - ./bin/phpunit
+
+### Endpoints
+  - /api/people
+  - /api/people/{id}
+  - /api/shiporders
+  - /api/shiporders/{id}
+  - /upload
+
+### Instructions
+  - Access the upload screen /upload and submit the two files at the sametime, the 'happy way' is working
+  - The files are in html/tests/Service/Assets
+  - If you run the tests, clean the database before using the upload feature (same data)
