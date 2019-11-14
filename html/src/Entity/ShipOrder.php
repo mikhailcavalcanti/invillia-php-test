@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="shiporder")
  */
-final class ShipOrder
+class ShipOrder
 {
 
     /**
@@ -36,7 +36,7 @@ final class ShipOrder
     private $shipTo;
 
     /**
-     * @ORM\OneToMany(targetEntity="Item", mappedBy="shiporder")
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="shipOrder")
      * @var Item[]
      */
     private $items;
@@ -81,15 +81,5 @@ final class ShipOrder
         foreach ($this->items as $item) {
             $entityManager->persist($item);
         }
-    }
-    
-    public function getShipTo()
-    {
-        return $this->shipTo;
-    }
-    
-    public function getItems()
-    {
-        return $this->getItems();
     }
 }

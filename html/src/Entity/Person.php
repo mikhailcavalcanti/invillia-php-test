@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="person")
  */
-final class Person
+class Person
 {
 
     /**
@@ -62,29 +62,5 @@ final class Person
         foreach ($this->phones as $phone) {
             $entityManager->persist($phone);
         }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName():string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getPhones()
-    {
-        return $this->phones;
     }
 }
