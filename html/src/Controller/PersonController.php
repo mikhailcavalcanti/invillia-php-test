@@ -22,10 +22,21 @@ final class PersonController extends AbstractFOSRestController
      *
      * @return Response
      */
-    public function getPeopleAction()
+    public function list()
     {
         $repository = $this->getDoctrine()->getRepository(Person::class);
-        $people = $repository->findall();
-        return $this->handleView($this->view($people));
+        return $this->handleView($this->view($repository->findall()));
+    }
+
+    /**
+     * Lists one person by id.
+     * @Rest\Get("/people/{id}")
+     *
+     * @return Response
+     */
+    public function find($id)
+    {
+        $repository = $this->getDoctrine()->getRepository(Person::class);
+        return $this->handleView($this->view($repository->find($id)));
     }
 }

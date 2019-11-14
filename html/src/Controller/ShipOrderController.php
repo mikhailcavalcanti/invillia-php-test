@@ -22,10 +22,21 @@ final class ShipOrderController extends AbstractFOSRestController
      *
      * @return Response
      */
-    public function getShipOrdesAction()
+    public function list()
     {
         $repository = $this->getDoctrine()->getRepository(ShipOrder::class);
-        $data = $repository->findall();
-        return $this->handleView($this->view($data));
+        return $this->handleView($this->view($repository->findall()));
+    }
+
+    /**
+     * Lists one ship order by id.
+     * @Rest\Get("/shiporders/{id}")
+     *
+     * @return Response
+     */
+    public function find($id)
+    {
+        $repository = $this->getDoctrine()->getRepository(ShipOrder::class);
+        return $this->handleView($this->view($repository->find($id)));
     }
 }
