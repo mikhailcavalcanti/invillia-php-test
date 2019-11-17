@@ -36,11 +36,12 @@ Test project for Invillia company
       - ./bin/phpunit
 
 ### Endpoints
-  - /api/people
-  - /api/people/{id}
-  - /api/shiporders
-  - /api/shiporders/{id}
-  - /upload
+  - You may see those routes documented in /api/doc
+    - /api/people
+    - /api/people/{id}
+    - /api/shiporders
+    - /api/shiporders/{id}
+    - /upload
 
 ### Instructions
   - Access the upload screen /upload and submit the two files at the sametime, the 'happy way' is working
