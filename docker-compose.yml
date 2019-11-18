@@ -1,0 +1,42 @@
+#https://www.cloudreach.com/blog/containerize-this-php-apache-mysql-within-docker-containers/
+version: "3.2"
+services:
+  php:
+    build: './php/'
+    container_name: invillia-php
+    networks:
+      - backend
+    volumes:
+      - ./html/:/var/www/html/
+  apache:
+    build: './apache/'
+    container_name: invillia-apache
+    depends_on:
+      - php
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./html/:/var/www/html/
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: invillia-mysql
+    volumes:
+      - invillia_data/:/var/lib/mysql
+    networks:
+      - backend
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=invillia
+      - MYSQL_USER=usr_invillia
+      - MYSQL_PASSWORD=pwd_invillia
+    ports:
+      - 3306:3306
+volumes:
+  invillia_data: {}
+networks:
+  frontend:
+  backend:
