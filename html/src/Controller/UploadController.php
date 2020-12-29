@@ -14,6 +14,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Description of UploadController
+ *
+ * @author Mikhail Cavalcanti <mikhailcavalcanti@gmail.com>
+ */
 class UploadController extends AbstractController
 {
 

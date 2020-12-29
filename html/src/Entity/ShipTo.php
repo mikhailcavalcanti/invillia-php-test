@@ -57,19 +57,17 @@ class ShipTo
     private $country;
 
     /**
-     *
-     * @param \App\Entity\ShipOrder $shipOrder
-     * @param string $name
-     * @param string $address
-     * @param string $city
-     * @param string $country
+     * Assign the entity with the array data
+     * @param array $data The entity information data do be filled
+     * @return ShipTo
      */
-    public function __construct(ShipOrder $shipOrder, string $name, string $address, string $city, string $country)
+    public function assign(array $data)
     {
-        $this->shipOrder = $shipOrder;
-        $this->name = $name;
-        $this->address = $address;
-        $this->city = $city;
-        $this->country = $country;
+        $this->shipOrder = $data['shipOrder'];
+        $this->name = $data['name'];
+        $this->address = $data['address'];
+        $this->city = $data['city'];
+        $this->country = $data['country'];
+        return $this;
     }
 }

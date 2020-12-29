@@ -4,11 +4,11 @@ namespace App\Service;
 
 use App\Entity\Person;
 use App\Entity\ShipOrder;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use DomainException;
 
 /**
- * ShipOrderService is the class responsible for the business logic of the Person domain
+ * ShipOrderService is the class responsible for the business logic of the ShipOrder domain
  *
  * @author Mikhail Cavalcanti <mikhailcavalcanti@gmail.com>
  */
@@ -17,15 +17,15 @@ class ShipOrderService
 
     /**
      *
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $entityManager;
 
     /**
      *
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
@@ -47,11 +47,25 @@ class ShipOrderService
             if ($xmlObject->shiporder->$key->items->item->count() > 1) {
                 $items = $shipOrder['items']['item'];
             }
-            $personEntity = $this->entityManager->getRepository(Person::class)->find(intval($shipOrder['orderperson']));
-            $shipOrderEntity = new ShipOrder($personEntity, $shipOrder['shipto'], $items, $shipOrder['orderid']);
+            $shipOrderEntity = $this->find($shipOrder['orderid']) ?? new ShipOrder();
+            $shipOrderEntity->assign([
+                'id' => $shipOrder['orderid'],
+                'person' => $shipOrder['orderperson'],
+                'shipTo' => $shipOrder['shipto'],
+                'items' => $items,
+            ], $this->entityManager);
             $shipOrderEntity->persist($this->entityManager);
         }
         $this->entityManager->flush();
+    }
+
+    /**
+     *
+     * @return ShipOrder ShipOrder entity on the database
+     */
+    public function find($id)
+    {
+        return $this->entityManager->getRepository(ShipOrder::class)->find($id);
     }
 
     /**

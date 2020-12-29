@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,61 +20,67 @@ class ShipOrder
      * @ORM\GeneratedValue(strategy="NONE")
      * @var int
      */
-    private $id;
+    private $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Person")
      * @ORM\JoinColumn(name="id_person", referencedColumnName="id", nullable=false)
      * @var Person
      */
-    private $person;
+    private $person = null;
 
     /**
      * @ORM\OneToOne(targetEntity="ShipTo", mappedBy="shipOrder")
      * @var ShipTo
      */
-    private $shipTo;
+    private $shipTo = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Item", mappedBy="shipOrder")
      * @var Item[]
      */
-    private $items;
+    private $items = [];
 
     /**
      *
-     * @param Person $person The person who owns the ship order
-     * @param array $shipTo The ship order destiny data
-     * @param Item[] $items The ship order items
-     * @param int $id
      */
     public function __construct(
-        Person $person,
-        array $shipTo,
-        array $items,
-        int $id = 0
     ) {
-        $this->person = $person;
-        $this->shipTo = new ShipTo(
-            $this,
-            $shipTo['name'],
-            $shipTo['address'],
-            $shipTo['city'],
-            $shipTo['country']
-        );
-        $itemsEntity = [];
-        foreach ($items as $item) {
-            array_push($itemsEntity, new Item($this, $item['title'], $item['note'], $item['quantity'], $item['price']));
+        $this->items = new ArrayCollection([]);
+    }
+
+    /**
+     * Assign the entity with the array data
+     * @param array $data The entity information data do be filled
+     * @param EntityManagerInterface $entityManager
+     */
+    public function assign(array $data, EntityManagerInterface $entityManager)
+    {
+        $data['shipTo']['shipOrder'] = $this;
+        $this->id = $data['id'] ?? $this->id;
+        $this->person = $entityManager->getRepository(Person::class)->find($data['person']);
+        $shipTo = $entityManager->getRepository(ShipTo::class)->findOneBy(array('shipOrder' => $this));
+        $this->shipTo = ($shipTo ? : new ShipTo())->assign($data['shipTo']);
+        
+        $this->items->clear();
+        foreach ($data['items'] as $item) {
+            $itemDb = $entityManager->getRepository(Item::class)->findOneBy(array('shipOrder' => $this));
+            $itemEntity = ($itemDb ?: new Item())->assign([
+                'shipOrder' => $this,
+                'title' => $item['title'],
+                'note' => $item['note'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+            ]);
+            $this->items->add($itemEntity);
         }
-        $this->items = new ArrayCollection($itemsEntity);
-        $this->id = $id;
     }
 
     /**
      *
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      */
-    public function persist(EntityManager $entityManager)
+    public function persist(EntityManagerInterface $entityManager)
     {
         $entityManager->persist($this);
         $entityManager->persist($this->shipTo);

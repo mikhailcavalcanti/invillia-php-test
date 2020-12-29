@@ -10,6 +10,7 @@ Test project for Invillia company
         bin/console doctrine:schema:create
 
         # run the tests
+        ./bin/console doctrine:fixtures:load
         ./bin/phpunit
 
 ### Docker (environment)

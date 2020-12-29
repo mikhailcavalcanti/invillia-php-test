@@ -2,31 +2,39 @@
 
 namespace App\Service;
 
-use Doctrine\ORM\EntityManager;
+use App\Service\PersonService;
+use App\Service\ShipOrderService;
 
 /**
- * Description of ProcessXmlService
+ * ProcessXmlService is the class responsible for the business logic of the ProcessXmlService domain
  *
- * @author mikha
+ * @author Mikhail Cavalcanti <mikhailcavalcanti@gmail.com>
  */
 class ProcessXmlService
 {
-    
-    /**
-     *
-     * @var EntityManager
-     */
-    private $entityManager;
 
     /**
      *
-     * @param EntityManager $entityManager
+     * @var PersonService
      */
-    public function __construct(EntityManager $entityManager)
+    private $personService = null;
+
+    /**
+     *
+     * @var ShipOrderService
+     */
+    private $shipOrderService = null;
+
+    /**
+     * @param PersonService $personService
+     * @param ShipOrderService $shipOrderService
+     */
+    public function __construct(PersonService $personService, ShipOrderService $shipOrderService)
     {
-        $this->entityManager = $entityManager;
+        $this->personService = $personService;
+        $this->shipOrderService = $shipOrderService;
     }
-    
+
     /**
      *
      * @param string $xmlFilePath
@@ -35,19 +43,12 @@ class ProcessXmlService
     public function processXml(string $xmlFilePath)
     {
         $xmlObject = simplexml_load_file($xmlFilePath);
-        $servicesNames = [
-            'people' => ['service' => 'PersonService', 'method' => 'addPeopleFromXml'],
-            'shiporders' => ['service' => 'ShipOrderService', 'method' => 'addShipOrdersFromXml']
+        $services = [
+            'people' => ['service' => $this->personService, 'method' => 'addPeopleFromXml'],
+            'shiporders' => ['service' => $this->shipOrderService, 'method' => 'addShipOrdersFromXml']
         ];
-
-        $serviceClassName = "App\\Service\\{$servicesNames[$xmlObject->getName()]['service']}";
-        $methodName = $servicesNames[$xmlObject->getName()]['method'];
-
-        if (! class_exists($serviceClassName)) {
-            throw new Exception("Don't know how to handle this Xml");
-        }
-
-        $serviceInstance = new $serviceClassName($this->entityManager);
-        $serviceInstance->$methodName($xmlFilePath);
+        $service = $services[$xmlObject->getName()]['service'];
+        $methodName = $services[$xmlObject->getName()]['method'];
+        call_user_func([$service, $methodName], $xmlFilePath);
     }
 }

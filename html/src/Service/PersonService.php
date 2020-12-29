@@ -3,8 +3,9 @@
 namespace App\Service;
 
 use App\Entity\Person;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use DomainException;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * PersonService is the class responsible for the business logic of the Person domain
@@ -16,15 +17,15 @@ class PersonService
 
     /**
      *
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $entityManager;
 
     /**
      *
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
@@ -41,11 +42,12 @@ class PersonService
         }
         $xmlObject = simplexml_load_file($xmlFilePath);
         foreach ($xmlObject->children() as $person) {
-            $personEntity = new Person(
-                strval($person->personname),
-                (array) $person->phones->phone,
-                intval($person->personid)
-            );
+            $personEntity = $this->find($person->personid) ?? new Person();
+            $personEntity->assign([
+                'name' => $person->personname,
+                'phones' => (array) $person->phones->phone,
+                'id' => $person->personid
+            ], $this->entityManager);
             $personEntity->persist($this->entityManager);
         }
         $this->entityManager->flush();
@@ -53,7 +55,16 @@ class PersonService
 
     /**
      *
-     * @return array Array of people entity to the database
+     * @return Person Person entity on the database
+     */
+    public function find($id)
+    {
+        return $this->entityManager->getRepository(Person::class)->find($id);
+    }
+
+    /**
+     *
+     * @return array Array of people entity on the database
      */
     public function findAll()
     {
