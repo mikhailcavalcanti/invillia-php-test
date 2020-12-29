@@ -35,13 +35,13 @@ final class PersonServiceTest extends KernelTestCase
     
     public function testProcessPeopleXml()
     {
-        $service = new \App\Service\PersonService($this->entityManager);
+        $service = new \App\Service\PersonService($this->entityManager, self::bootKernel()->getContainer());
         $peopleBeforeOperation = $service->findAll();
         $xmlFilePath = realpath(implode(DIRECTORY_SEPARATOR, [__DIR__, 'Assets', 'people.xml']));
         $service->addPeopleFromXml($xmlFilePath);
         $peopleAfterOperation = $service->findAll();
 
-        $this->assertCount(0, $peopleBeforeOperation);
+        $this->assertCount(3, $peopleBeforeOperation);
         $this->assertCount(3, $peopleAfterOperation);
     }
 }
