@@ -57,19 +57,17 @@ class Item
     private $price;
 
     /**
-     *
-     * @param \App\Entity\ShipOrder $shipOrder
-     * @param string $title
-     * @param string $note
-     * @param int $quantity
-     * @param float $price
+     * Assign the entity with the array data
+     * @param array $data The entity information data do be filled
+     * @return Item
      */
-    public function __construct(ShipOrder $shipOrder, string $title, string $note, int $quantity, float $price)
+    public function assign(array $data)
     {
-        $this->shipOrder = $shipOrder;
-        $this->title = $title;
-        $this->note = $note;
-        $this->quantity = $quantity;
-        $this->price = $price;
+        $this->shipOrder = $data['shipOrder'];
+        $this->title = $data['title'];
+        $this->note = $data['note'];
+        $this->quantity = $data['quantity'];
+        $this->price = $data['price'];
+        return $this;
     }
 }

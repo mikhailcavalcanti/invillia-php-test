@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -20,43 +20,50 @@ class Person
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $id;
+    private $id = null;
 
     /**
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
      *
      */
-    private $name;
+    private $name = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Phone", mappedBy="person")
      * @var Phone
      */
-    private $phones;
+    private $phones = [];
+
+    public function __construct()
+    {
+        $this->phones = new ArrayCollection([]);
+    }
 
     /**
-     *
-     * @param string $name The person name
-     * @param array $phones The person's phones
-     * @param int $id The person identification in the database
+     * Assign the entity with the array data
+     * @param array $data The entity information data do be filled
+     * @param EntityManagerInterface $entityManager
+     * @return Person
      */
-    public function __construct(string $name, array $phones = [], int $id = 0)
+    public function assign(array $data, EntityManagerInterface $entityManager)
     {
-        $this->name = $name;
-        $phonesEntity = [];
-        foreach ($phones as $phone) {
-            array_push($phonesEntity, new Phone($phone, $this));
+        $this->id = $data['id'] ?? $this->id;
+        $this->name = $data['name'] ?? $this->name;
+
+        $this->phones->clear();
+        foreach ($data['phones'] as $number) {
+            $phone = $entityManager->getRepository(Phone::class)->findOneBy(array('number' => $number));
+            $this->phones->add($phone ? : new Phone($number, $this));
         }
-        $this->phones = new ArrayCollection($phonesEntity);
-        $this->id = $id;
+        return $this;
     }
 
     /**
      *
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      */
-    public function persist(EntityManager $entityManager)
+    public function persist(EntityManagerInterface $entityManager)
     {
         $entityManager->persist($this);
         foreach ($this->phones as $phone) {
